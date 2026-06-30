@@ -3,32 +3,27 @@
 // ════════════════════════════════════════════════════════════════
 
 export const navItems = [
-  { icon: "⊞",  label: "Dashboard" },
-  { icon: "🏛",  label: "Institutions" },   // merged Colleges + Organizations
-  { icon: "🛒",  label: "Vendors" },
-  { icon: "👤",  label: "Admins" },
-  { icon: "📊",  label: "Analytics" },
-  { icon: "📋",  label: "Reports" },
-  { icon: "🖥",  label: "Monitoring" },
+  { icon: "⊞", label: "Dashboard" },
+  { icon: "🏢", label: "Organizations" },
+  { icon: "🛒", label: "Vendors" },
+  { icon: "👤", label: "Admins" },
+  { icon: "🏫", label: "Colleges" },
+  { icon: "📊", label: "Analytics" },
+  { icon: "📋", label: "Reports" },
+  { icon: "🖥", label: "Monitoring" },
   { icon: "⚙️", label: "Settings" },
 ];
 
 export const pageMeta = {
-  Dashboard:    { title: "Dashboard",    subtitle: "Platform Overview" },
-  Institutions: { title: "Institutions", subtitle: "Colleges & Organizations" },  // merged
-  Vendors:      { title: "Vendors",      subtitle: "Vendor accounts & subscriptions" },
-  Admins:       { title: "Admins",       subtitle: "Platform & organization admins" },
-  Analytics:    { title: "Analytics",    subtitle: "Platform-wide analytics" },
-  Reports:      { title: "Reports",      subtitle: "Platform reports & exports" },
-  Monitoring:   { title: "Monitoring",   subtitle: "Live system health & metrics" },
-  Settings:     { title: "Settings",     subtitle: "Platform configuration" },
-};
-
-export const pageActions = {
-  Institutions: "+ Add Institution",
-  Vendors:      "+ Add Vendor",
-  Admins:       "+ Add Admin",
-  Reports:      "+ Generate Report",
+  Dashboard:     { title: "Dashboard",     subtitle: "Platform Overview" },
+  Organizations: { title: "Organizations",  subtitle: "All platform institutions" },
+  Vendors:       { title: "Vendors",        subtitle: "Vendor accounts & subscriptions" },
+  Admins:        { title: "Admins",         subtitle: "Platform & organization admins" },
+ Colleges: { title: "Colleges", subtitle: "Manage all college accounts on the platform" },
+  Analytics:     { title: "Analytics",      subtitle: "Platform-wide analytics" },
+  Reports:       { title: "Reports",        subtitle: "Platform reports & exports" },
+  Monitoring:    { title: "Monitoring",     subtitle: "Live system health & metrics" },
+  Settings:      { title: "Settings",       subtitle: "Platform configuration" },
 };
 
 export const ROLE_CONFIG = {
@@ -115,4 +110,3 @@ export const reports = [
   { id:5, title: "Certificate Issuance Log",   type: "Certificate",by: "Admin",             date: "Jun 18, 2026", priority: "Low",    status: "Completed" },
   { id:6, title: "Dropout Analysis Q2",        type: "Analytics",  by: "Dr. Rao",           date: "Jun 24, 2026", priority: "High",   status: "Pending"   },
 ];
-

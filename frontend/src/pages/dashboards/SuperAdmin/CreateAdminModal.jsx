@@ -1,15 +1,10 @@
 // ════════════════════════════════════════════════════════════════
-//  CREATE ADMIN MODAL  —  accepts a `roleType` prop to restrict
-//  which role can be created:
-//    "super"   → Restricted Super Admin only  (AdminsPage)
-//    "vendor"  → Vendor Admin only            (VendorsPage)
-//    "org"     → Org Admin only               (InstitutionsPage)
+//  CREATE ADMIN MODAL
 // ════════════════════════════════════════════════════════════════
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useTheme } from '@mui/material/styles';
 import { ROLE_CONFIG } from './constants';
-
 // ── Password Strength Helper ───────────────────────────────────
 function getPasswordStrength(pwd) {
   let score = 0;
@@ -27,27 +22,12 @@ function getPasswordStrength(pwd) {
   return levels[score];
 }
 
-// Map roleType prop → ROLE_CONFIG key
-const ROLE_MAP = {
-  super:  "Restricted Super Admin",
-  vendor: "Vendor Admin",
-  org:    "Org Admin",
-};
-
-const ROLE_LABELS = {
-  super:  { icon: "🎓", title: "Create Super Admin",      subtitle: "Assign platform-level access" },
-  vendor: { icon: "🛒", title: "Create Vendor Admin",     subtitle: "Assign vendor portal access"   },
-  org:    { icon: "🏢", title: "Create Institution Admin", subtitle: "Assign institution access"    },
-};
-
 // ── Modal Component ────────────────────────────────────────────
-export default function CreateAdminModal({ onClose, onCreated, onNavigate, roleType = "super" }) {
+export default function CreateAdminModal({ onClose, onCreated, onNavigate, initialRole }) {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
-  const role = ROLE_MAP[roleType];
-  const meta = ROLE_LABELS[roleType];
-
+  const [role, setRole]               = useState(initialRole || "Restricted Super Admin");
   const [firstName, setFirstName]     = useState("");
   const [lastName, setLastName]       = useState("");
   const [email, setEmail]             = useState("");
@@ -61,6 +41,11 @@ export default function CreateAdminModal({ onClose, onCreated, onNavigate, roleT
   const [submitting, setSubmitting]   = useState(false);
 
   const strength = getPasswordStrength(pwd);
+
+  const handleRoleChange = (r) => {
+    setRole(r);
+    setSelectedOrg(null);
+  };
 
   useEffect(() => {
     const defaultPerms = {};
@@ -102,13 +87,14 @@ export default function CreateAdminModal({ onClose, onCreated, onNavigate, roleT
         lastLogin: 'Just now',
       });
 
-      setSuccess('Admin created successfully!');
+      setSuccess('Admin created successfully. Redirecting...');
+
       setTimeout(() => {
         onClose();
         if (!onNavigate) return;
-        if (roleType === "super")  onNavigate("/dashboard/admin");
-        if (roleType === "vendor") onNavigate("/dashboard/vendor");
-        if (roleType === "org")    onNavigate("/dashboard/organization");
+        if (role === "Restricted Super Admin") onNavigate("/dashboard/admin");
+        else if (role === "Org Admin")         onNavigate("/dashboard/organization");
+        else if (role === "Vendor Admin")      onNavigate("/dashboard/vendor");
       }, 900);
 
     } catch (err) {
@@ -129,27 +115,30 @@ export default function CreateAdminModal({ onClose, onCreated, onNavigate, roleT
         {/* Header */}
         <div style={{ background: isDark ? "#16062B" : "#F8FAFC", padding:"16px 20px", borderBottom: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #E2E8F0", display:"flex", alignItems:"center", justifyContent:"space-between", borderRadius:"14px 14px 0 0" }}>
           <div style={{ display:"flex", alignItems:"center", gap:9 }}>
-            <div style={{ width:32, height:32, borderRadius:8, background:"linear-gradient(135deg,#623E98,#9B75C9)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:15 }}>{meta.icon}</div>
+            <div style={{ width:32, height:32, borderRadius:8, background:"linear-gradient(135deg,#623E98,#9B75C9)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:15 }}>👤</div>
             <div>
-              <div style={{ fontSize:14, fontWeight:700, color: isDark ? "#fff" : "#0F172A" }}>{meta.title}</div>
-              <div style={{ fontSize:11, color: isDark ? "#A692C4" : "#94A3B8" }}>{meta.subtitle}</div>
+              <div style={{ fontSize:14, fontWeight:700, color: isDark ? "#fff" : "#0F172A" }}>Create Admin User</div>
+              <div style={{ fontSize:11, color: isDark ? "#A692C4" : "#94A3B8" }}>Set credentials and assign role</div>
             </div>
           </div>
           <button onClick={onClose} style={{ background:"rgba(255,255,255,0.07)", border:"none", borderRadius:7, width:28, height:28, cursor:"pointer", fontSize:14, color: isDark ? "#CBB6E6" : "#475569", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
         </div>
 
         <div style={{ padding:"18px 20px" }}>
-          {/* Role badge — read-only display, no switcher */}
-          <div style={{ marginBottom:18 }}>
-            <label style={lbl}>Role</label>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:8, background: isDark ? "rgba(98,62,152,0.25)" : "#F3EEFF", border:"1.5px solid #623E98", borderRadius:8, padding:"7px 14px" }}>
-              <span style={{ fontSize:13 }}>{meta.icon}</span>
-              <span style={{ fontSize:12, fontWeight:700, color: isDark ? "#CBB6E6" : "#623E98" }}>{role}</span>
-            </div>
-          </div>
-
           {success && <div style={{ background:"rgba(34,197,94,0.12)", border:"1px solid rgba(34,197,94,0.3)", borderRadius:8, padding:"10px 14px", marginBottom:14, fontSize:12, color:"#22C55E" }}>✅ {success}</div>}
           {error   && <div style={{ background:"rgba(239,68,68,0.1)",  border:"1px solid rgba(239,68,68,0.3)",  borderRadius:8, padding:"10px 14px", marginBottom:14, fontSize:12, color:"#EF4444" }}>⚠️ {error}</div>}
+
+          {/* Role Selector */}
+          <div style={{ marginBottom:18 }}>
+            <label style={lbl}>Admin Role</label>
+            <div style={{ display:"flex", gap:6, background: isDark ? "rgba(255,255,255,0.04)" : "#F1F5F9", borderRadius:9, padding:4 }}>
+              {Object.keys(ROLE_CONFIG).map(r => (
+                <button key={r} onClick={() => handleRoleChange(r)} style={{ flex:1, padding:"7px 0", border:"none", borderRadius:7, fontSize:11, fontWeight:600, cursor:"pointer", transition:"all 0.15s", background: role === r ? "#623E98" : "transparent", color: role === r ? "#fff" : (isDark ? "#A692C4" : "#64748B") }}>
+                  {r === "Restricted Super Admin" ? "🎓" : r === "Org Admin" ? "🏢" : "🛒"} {r}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Name Fields */}
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
@@ -197,7 +186,7 @@ export default function CreateAdminModal({ onClose, onCreated, onNavigate, roleT
 
           {/* Org Selector */}
           <div style={{ marginBottom:18 }}>
-            <label style={lbl}>{roleType === "vendor" ? "Assign to Vendor *" : "Assign to Organization *"}</label>
+            <label style={lbl}>{role === "Vendor Admin" ? "Assign to Vendor *" : "Assign to Organization *"}</label>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {ROLE_CONFIG[role]?.orgs.map(org => (
                 <button key={org} onClick={() => setSelectedOrg(org)} style={{ padding:"8px 10px", borderRadius:8, fontSize:11, fontWeight:500, cursor:"pointer", textAlign:"left", transition:"all 0.15s", border: selectedOrg === org ? "1.5px solid #623E98" : isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0", background: selectedOrg === org ? "rgba(98,62,152,0.15)" : isDark ? "rgba(255,255,255,0.03)" : "#F8FAFC", color: selectedOrg === org ? (isDark ? "#CBB6E6" : "#623E98") : (isDark ? "#A692C4" : "#64748B") }}>
@@ -227,7 +216,7 @@ export default function CreateAdminModal({ onClose, onCreated, onNavigate, roleT
         <div style={{ padding:"14px 20px", borderTop: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #F1F5F9", display:"flex", gap:8, justifyContent:"flex-end" }}>
           <button type="button" onClick={onClose} style={{ background: isDark ? "rgba(255,255,255,0.05)" : "#F1F5F9", border:"none", borderRadius:8, padding:"9px 18px", fontSize:12, fontWeight:600, color: isDark ? "#A692C4" : "#64748B", cursor:"pointer" }}>Cancel</button>
           <button type="button" onClick={handleCreate} disabled={submitting} style={{ background:"linear-gradient(90deg,#623E98,#9B75C9)", border:"none", borderRadius:8, padding:"9px 20px", fontSize:12, fontWeight:700, color:"#fff", cursor: submitting ? "not-allowed" : "pointer", opacity: submitting ? 0.7 : 1, display:"flex", alignItems:"center", gap:6 }}>
-            {submitting ? "Creating..." : `${meta.icon} Create ${roleType === "super" ? "Admin" : roleType === "vendor" ? "Vendor Admin" : "Institution Admin"}`}
+            {submitting ? "Creating..." : "👤 Create User"}
           </button>
         </div>
       </div>

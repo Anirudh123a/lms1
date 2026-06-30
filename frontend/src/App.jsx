@@ -15,7 +15,7 @@ import VerifyOtp from './pages/auth/VerifyOtp';
 
 // ── Dashboards & Shell Layouts ──────────────────────────────────
 // AdminDashboard now lives in the split admin/ folder — Layout.jsx is the root
-import AdminDashboard from './pages/dashboards/admin/Layout';
+import AdminDashboard from './pages/dashboards/Admin/Layout';
 import StudentDashboard from './pages/dashboards/Student/Dashboard/Student';
 import OrganizationDashboard from './pages/dashboards/OrganizationDashboard';
 import VendorDashboard from './pages/dashboards/VendorDashboard';

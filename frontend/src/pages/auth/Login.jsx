@@ -14,6 +14,15 @@ const loginSchema = yup.object().shape({
     password: yup.string().required('Please enter your password')
 });
 
+const ROLE_ROUTES = {
+    SUPER_ADMIN: '/dashboard/super-admin',
+    ADMIN:       '/dashboard/admin',
+    VENDOR:      '/dashboard/vendor',
+    COLLEGE:     '/dashboard/college',
+    MENTOR:      '/dashboard/mentor',
+    STUDENT:     '/dashboard/student',
+};
+
 export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -28,22 +37,27 @@ export default function Login() {
     const onSubmit = async (data) => {
         setLoading(true);
         try {
-            const role = await login(data.identity, data.password);
+            const rawRole = await login(data.identity, data.password);
+
+            // Normalize defensively — protects against casing/whitespace mismatches
+            // from the backend (e.g. "super_admin", " SUPER_ADMIN") breaking the route lookup.
+            const role = typeof rawRole === 'string' ? rawRole.trim().toUpperCase() : rawRole;
+
+            // TEMP DEBUG — remove once the redirect is confirmed working
+            console.log('[login] raw role:', rawRole, '| normalized role:', role, '| resolved route:', ROLE_ROUTES[role]);
+
+            if (!ROLE_ROUTES[role]) {
+                toast.error(`Unrecognized role "${rawRole}" — please contact support.`);
+                navigate('/auth/login');
+                setLoading(false);
+                return;
+            }
+
             toast.success('Signed in successfully!');
-            
-            const routes = {
-                'SUPER_ADMIN': '/dashboard/super-admin',
-                'ADMIN':       '/dashboard/admin',
-                'VENDOR':      '/dashboard/vendor',
-                'COLLEGE':     '/dashboard/college',
-                'MENTOR':      '/dashboard/mentor',
-                'STUDENT':     '/dashboard/student',
-            };
-            navigate(routes[role] || '/auth/login');
+            navigate(ROLE_ROUTES[role]);
 
         } catch (err) {
             toast.error(err.response?.data?.message || err.message || 'Invalid email or password.');
-        } finally {
             setLoading(false);
         }
     };
