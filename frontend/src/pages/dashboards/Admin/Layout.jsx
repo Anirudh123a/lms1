@@ -5,7 +5,7 @@ import { navItems, pageMeta, pageActions } from "./constants";
 import DashboardPage   from "./DashboardPage";
 import AdminsPage      from "./AdminsPage";
 import AnalyticsPage, { EnrollmentsPage } from "./AnalyticsPage";
-import InstitutionsPage from "./Institutionspage";
+import InstitutionsPage from "./InstitutionsPage";
 import VendorsPage     from "./VendorsPage";
 import MonitoringPage  from "./MonitoringPage";
 import ReportsPage     from "./ReportsPage";
