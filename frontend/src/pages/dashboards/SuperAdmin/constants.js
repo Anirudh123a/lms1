@@ -3,27 +3,25 @@
 // ════════════════════════════════════════════════════════════════
 
 export const navItems = [
-  { icon: "⊞", label: "Dashboard" },
-  { icon: "🏢", label: "Organizations" },
-  { icon: "🛒", label: "Vendors" },
-  { icon: "👤", label: "Admins" },
-  { icon: "🏫", label: "Colleges" },
-  { icon: "📊", label: "Analytics" },
-  { icon: "📋", label: "Reports" },
-  { icon: "🖥", label: "Monitoring" },
+  { icon: "⊞",  label: "Dashboard" },
+  { icon: "🏛",  label: "Institutions" },   // merged Colleges + Organizations
+  { icon: "🛒",  label: "Vendors" },
+  { icon: "👤",  label: "Admins" },
+  { icon: "📊",  label: "Analytics" },
+  { icon: "📋",  label: "Reports" },
+  { icon: "🖥",  label: "Monitoring" },
   { icon: "⚙️", label: "Settings" },
 ];
 
 export const pageMeta = {
-  Dashboard:     { title: "Dashboard",     subtitle: "Platform Overview" },
-  Organizations: { title: "Organizations",  subtitle: "All platform institutions" },
-  Vendors:       { title: "Vendors",        subtitle: "Vendor accounts & subscriptions" },
-  Admins:        { title: "Admins",         subtitle: "Platform & organization admins" },
- Colleges: { title: "Colleges", subtitle: "Manage all college accounts on the platform" },
-  Analytics:     { title: "Analytics",      subtitle: "Platform-wide analytics" },
-  Reports:       { title: "Reports",        subtitle: "Platform reports & exports" },
-  Monitoring:    { title: "Monitoring",     subtitle: "Live system health & metrics" },
-  Settings:      { title: "Settings",       subtitle: "Platform configuration" },
+  Dashboard:    { title: "Dashboard",    subtitle: "Platform Overview" },
+  Institutions: { title: "Institutions", subtitle: "Colleges & Organizations" },  // merged
+  Vendors:      { title: "Vendors",      subtitle: "Vendor accounts & subscriptions" },
+  Admins:       { title: "Admins",       subtitle: "Platform & organization admins" },
+  Analytics:    { title: "Analytics",    subtitle: "Platform-wide analytics" },
+  Reports:      { title: "Reports",      subtitle: "Platform reports & exports" },
+  Monitoring:   { title: "Monitoring",   subtitle: "Live system health & metrics" },
+  Settings:     { title: "Settings",     subtitle: "Platform configuration" },
 };
 
 export const ROLE_CONFIG = {

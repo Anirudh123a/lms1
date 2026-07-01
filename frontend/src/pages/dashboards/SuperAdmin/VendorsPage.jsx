@@ -7,11 +7,13 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { StatCard, SectionCard, SearchBar, Table, TD } from "./SharedUI";
 import { planBadge, statusBadge } from "./SharedUI";
 import { vendorsList } from "./constants";
+import CreateAdminModal from "./CreateAdminModal";
 
 export default function VendorsPage() {
   const isDark = useTheme().palette.mode === 'dark';
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [showVendorAdminModal, setShowVendorAdminModal] = useState(false);
   const plans = ["All", "Enterprise", "Business", "Starter"];
 
   const filtered = vendorsList.filter(v =>
@@ -50,6 +52,12 @@ export default function VendorsPage() {
               <button key={opt} onClick={() => setFilter(opt)} style={{ padding:"5px 13px", borderRadius:20, fontSize:11, fontWeight:600, cursor:"pointer", border:"none", background: filter===opt?"#623E98":"#F1F5F9", color: filter===opt?"#fff":"#475569" }}>{opt}</button>
             ))}
           </div>
+          <button
+            onClick={() => setShowVendorAdminModal(true)}
+            style={{ marginLeft:"auto", background:"linear-gradient(90deg,#623E98,#9B75C9)", color:"#fff", border:"none", padding:"7px 16px", borderRadius:6, cursor:"pointer", fontWeight:700, fontSize:13, whiteSpace:"nowrap" }}
+          >
+            + Add Vendor Admin
+          </button>
         </div>
 
         <Table
@@ -69,6 +77,14 @@ export default function VendorsPage() {
         />
         {filtered.length === 0 && <div style={{ textAlign:"center", padding:"30px 0", color:"#94A3B8", fontSize:13 }}>No vendors found.</div>}
       </SectionCard>
+
+      {showVendorAdminModal && (
+        <CreateAdminModal
+          roleType="vendor"
+          onClose={() => setShowVendorAdminModal(false)}
+          onCreated={() => {}}
+        />
+      )}
     </>
   );
 }
